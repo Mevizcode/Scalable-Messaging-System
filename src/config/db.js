@@ -4,11 +4,11 @@ const { Pool } = pkg;
 dotenv.config();
 
 const pool = new Pool({
-    user: 'postgres', //process.env.DB_USER
-    password: '000000', //process.env.DB_PASSWORD
-    host: 'db', //process.env.DB_HOST
-    database: 'messaging_db', //process.env.DB_DATABASE
-    port: 5432 //process.env.DB_PORT
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT
 });
 
 pool.connect()

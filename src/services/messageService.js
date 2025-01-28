@@ -1,7 +1,7 @@
 import { queryDb } from "../config/db.js";
 import socketIOConfig from '../config/socketIO.js';
 import { addMessageStatus, updateMessageStatus } from "./messageStatusService.js";
-//import { getCache, setCache } from '../config/redis.js';
+import { getCache, setCache } from '../config/redis.js';
 
 export const saveMessage = async (messages) => {
     const { senderId, receiverId, groupId, content } = messages;
@@ -88,8 +88,8 @@ export const fetchMessages = async (senderId, receiverId, groupId, startDate, en
             messages = result;
 
             //loop throw all the messages and update message status accordingly
-            // Cache the result for future requests
-            //await setCache(cachekey, 500, JSON.stringify(messages));
+            //Cache the result for future requests
+            await setCache(cachekey, 500, JSON.stringify(messages));
         }
         return messages;
     } catch (err) {

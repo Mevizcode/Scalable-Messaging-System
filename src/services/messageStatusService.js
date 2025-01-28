@@ -17,7 +17,7 @@ export const addMessageStatus = async (messageId) => {
 
         console.log(savedMessageStatus[0]);
         // Cache the result to reduce DB hits
-        //await cacheSet(`message_status:${savedStatus.id}`, JSON.stringify(savedStatus));
+        await cacheSet(`message_status:${savedStatus.id}`, JSON.stringify(savedStatus));
 
         return savedMessageStatus[0];
     } catch (err) {
@@ -52,7 +52,7 @@ export const updateMessageStatus = async (messageId, status) => {
         }
 
         // Cache the updated status to reduce future DB queries
-        //await cacheSet(`message_status:${messageId}`, JSON.stringify(updatedStatus));
+        await cacheSet(`message_status:${messageId}`, JSON.stringify(updatedStatus));
 
         return updatedMessageStatus;
     } catch (err) {
