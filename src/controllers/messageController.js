@@ -3,24 +3,14 @@ import { saveMessage, fetchMessages } from "../services/messageService.js";
 export const sendMessage = async (req, res) => {
     try {
         const message = await saveMessage(req.body);
-        if (message.length > 0) {
-           return res.status(201).send(message);
-        }
-       return res.status(400).send();
+        return res.status(201).send(message);
     } catch (error) {
         return res.status(500).json({ errorMessage: error });
     }
 }
 
 export const retreiveMessage = async (req, res) => {
-    const senderId = req.params.senderId;
-    const receiverId = req.params.receiverId;
-    const groupId = req.params.groupId;
-    const startDate = req.query.startDate;
-    const endDate = req.query.endDate;
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
-    const offset = (page - 1) * pageSize;
+    const { senderId, receiverId, groupId, startDate, endDate, page, pageSize } = req.query;
 
     const isValidDate = (date) => !isNaN(Date.parse(date));
 
@@ -33,7 +23,7 @@ export const retreiveMessage = async (req, res) => {
     }
 
     try {
-        const messages = await fetchMessages(senderId, receiverId, groupId, startDate, endDate, pageSize, offset);
+        const messages = await fetchMessages(senderId, receiverId, groupId, startDate, endDate, parseInt(pageSize), parseInt(page));
 
         if (messages.length === 0) {
             return res.status(404).json({ message: 'No messages found' });
