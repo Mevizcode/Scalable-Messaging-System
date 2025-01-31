@@ -43,3 +43,38 @@ CREATE TABLE IF NOT EXISTS messages_status (
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (message_id) REFERENCES messages (message_id) ON DELETE CASCADE
 );
+
+-- fetch messages with pagination, ordering and date range filtering query
+SELECT * FROM messages
+                WHERE (sender_id = $1 AND receiver_id = $2)
+                OR (sender_id = $2 AND receiver_id = $1)
+             AND timestamp >= $3 AND timestamp < $4
+            ORDER BY timestamp DESC
+            LIMIT $5
+            OFFSET $6
+
+-- fetch group messages
+
+SELECT * FROM messages WHERE group_id = $1 AND timestamp >= $2 AND timestamp < $3 
+            ORDER BY timestamp DESC
+            LIMIT $4
+            OFFSET $5
+
+-- add users and groups
+BEGIN;
+
+INSERT INTO groups (group_name) 
+VALUES 
+    ('group-A'), 
+    ('group-B'), 
+    ('group-C');
+
+INSERT INTO users (username) 
+VALUES 
+    ('dave'), 
+    ('test'), 
+    ('sam'), 
+    ('roy'), 
+    ('john');
+
+COMMIT;

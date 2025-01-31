@@ -1,14 +1,19 @@
 import pkg from "pg";
-import dotenv from "dotenv";
-const { Pool } = pkg;
-dotenv.config();
+import { config } from "./default.config.js";
+import './loadEnv.js';
 
-const pool = new Pool({
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT
+const { Pool } = pkg;
+
+export const pool = new Pool({
+    user: config.db.user,
+    password: config.db.password,
+    host: config.db.host,
+    database: config.db.database,
+    port: config.db.port,
+    pool: {
+        max: config.db.retries,
+        idleTimeoutMillis: config.db.timeout
+    }
 });
 
 pool.connect()
@@ -18,13 +23,3 @@ pool.connect()
     .catch((error) => {
         console.error("PostgreSQL connection error: ", error.message);
     });
-
-export const queryDb = async (query, values) => {
-    try {
-        const result = await pool.query(query, values);
-        return result.rows;
-    } catch (err) {
-        console.error('Error executing query:', err);
-        throw new Error('Database query failed');
-    }
-};

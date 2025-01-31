@@ -1,14 +1,46 @@
 export const handleSocketEvents = (socket) => {
-    // a user joins a group room
-    socket.on('join_group', (groupId) => {
-        socket.join(`group_${groupId}`);
-        console.log(`User ${socket.id} joined group: ${groupId}`);
+    const joinRoom = ({ roomId, eventName, successMessage }) => {
+        if (!roomId) {
+            return socket.emit('error', { message: 'Missing room ID' });
+        }
+
+        socket.join(roomId);
+        console.log(`User ${socket.id} joined room: ${roomId}`);
+
+        // Notify the user
+        socket.emit(eventName, { roomId, message: successMessage });
+
+        // Notify others
+        socket.to(roomId).emit(`${eventName}_notification`, {
+            message: `A user has joined ${roomId}.`,
+        });
+    };
+
+    // Private conversation
+    socket.on('join_conversation', ({ senderId, receiverId }) => {
+        if (!senderId || !receiverId) {
+            return socket.emit("error", { message: 'Missing sender or receiver ID' });
+        }
+
+        const privateRoomId = [senderId, receiverId].sort().join("-");
+
+        joinRoom({
+            roomId: privateRoomId,
+            eventName: 'joined_conversation',
+            successMessage: `You have joined the conversation with ${receiverId}.`,
+        });
     });
 
-    // user joins an individual conversation room
-    socket.on('join_conversation', ({ senderId, receiverId }) => {
-        const room = `conversation_${senderId}_${receiverId}`;
-        socket.join(room);
-        console.log(`User ${socket.id} joined conversation room: ${room}`);
+    // Group chat
+    socket.on('join_group', ({ groupId }) => {
+        if (!groupId) {
+            return socket.emit("error", { message: 'Missing group ID' });
+        }
+
+        joinRoom({
+            roomId: `group-${groupId}`,
+            eventName: 'joined_group',
+            successMessage: `You have joined group ${groupId}.`,
+        });
     });
 };

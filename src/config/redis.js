@@ -1,11 +1,10 @@
-import redis from 'redis';
-import dotenv from 'dotenv';
+import { createClient } from 'redis';
+import { config } from './default.config.js';
+import './loadEnv.js';
 
-dotenv.config();
-
-const redisClient = redis.createClient({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
+const redisClient = createClient({
+    host: config.redis.host,
+    port: config.redis.port,
 });
 
 redisClient.on('connect', () => {
