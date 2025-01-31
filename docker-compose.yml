@@ -3,31 +3,35 @@ services:
   app:
     build: .
     container_name: messaging_system
+    env_file: ./.env.dev
     ports:
-      - "8080:3000"
+      - ${PORT}:${PORT}
     environment:
-      - PORT=3000
-      # - DB_USER=postgres
-      # - DB_PASSWORD=000000
-      # - DB_HOST=db
-      # - DB_DATABASE=messaging_db
-      # - DB_PORT=5432
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - PORT=${PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_PORT=${DB_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
     depends_on:
       - db
       - redis
     networks:
-      - app-network
+      app-network:
+        #name: app-network
+        #attachable: true
 
   #postgres service
   db:
     image: postgres:latest
     container_name: postgres-db
+    env_file: ./.env.dev
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "000000"
-      POSTGRES_DB: "messaging_db"
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
     # volumes:
     # - postgres-data:/var/lib/postgresql/data
     # - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
@@ -38,6 +42,10 @@ services:
   redis:
     image: redis:latest
     container_name: redis-server
+    env_file: ./.env.dev
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
     networks:
       - app-network
 
