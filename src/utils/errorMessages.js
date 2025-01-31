@@ -1,0 +1,16 @@
+export const ERROR_MESSAGES = {
+    RETRIEVE_MESSAGES_FAILED: 'Failed to retrieve messages. Please try again later.',
+    RECORD_NOT_FOUND: 'Message status record not found',
+    INVALID_START_DATE: 'Start Date cannot be after End Date',
+    INVALID_IDS: 'Cannot mix groupId with private conversation IDs',
+    INSERT_MESSAGE_FAILED: 'Error while saving the message',
+    SENDER_ID_REQUIRED: 'Sender ID required',
+    CONTENT_REQUIRED: 'Content required',
+    EITHER_RECEIVER_OR_GROUP_ID_REQUIRED: 'Need receiver or group ID',
+    BOTH_RECEIVER_AND_GROUP_ID_IS_NOT_PERMITTED: 'Cannot combine receiver/group',
+    VALIDATION_FAILED: 'Validation failed',
+    ERROR_500: 'Internal Server Error',
+    ERROR_400: 'Bad Request',
+    ERROR_404: 'Not Found',
+    INVALID_JSON: 'Invalid JSON format',
+};
