@@ -1,16 +1,3 @@
--- DROP DATABASE IF EXISTS messaging_db;
-
-CREATE DATABASE messaging_db
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'Chinese (Simplified)_China.1252'
-    LC_CTYPE = 'Chinese (Simplified)_China.1252'
-    LOCALE_PROVIDER = 'libc'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-    IS_TEMPLATE = False;
-
 CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -43,22 +30,6 @@ CREATE TABLE IF NOT EXISTS messages_status (
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (message_id) REFERENCES messages (message_id) ON DELETE CASCADE
 );
-
--- fetch messages with pagination, ordering and date range filtering query
-SELECT * FROM messages
-                WHERE (sender_id = $1 AND receiver_id = $2)
-                OR (sender_id = $2 AND receiver_id = $1)
-             AND timestamp >= $3 AND timestamp < $4
-            ORDER BY timestamp DESC
-            LIMIT $5
-            OFFSET $6
-
--- fetch group messages
-
-SELECT * FROM messages WHERE group_id = $1 AND timestamp >= $2 AND timestamp < $3 
-            ORDER BY timestamp DESC
-            LIMIT $4
-            OFFSET $5
 
 -- add users and groups
 BEGIN;

@@ -12,11 +12,11 @@ export const saveMessage = async ({ senderId, receiverId, groupId, content }) =>
         await addMessageStatus({ messageId, status: MESSAGE_STATUS.SENT });
 
         if (receiverId && senderId) {
-            privateMessage(senderId, receiverId, content, timestamp);
+            await privateMessage({ senderId, receiverId, content, timestamp });
         } else if (groupId) {
-            groupMessage(senderId, groupId, content, timestamp);
+            await groupMessage({ senderId, groupId, content, timestamp });
         }
-        return modifyMessageStatus({ messageId, status: MESSAGE_STATUS.DELIVERED });
+        return await modifyMessageStatus({ messageId, status: MESSAGE_STATUS.DELIVERED });
     } catch (err) {
         throw err;
     }
