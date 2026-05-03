@@ -1,5 +1,5 @@
-import { saveMessage, fetchMessages } from "../services/messageService.js";
-import { ERROR_MESSAGES } from "../utils/errorMessages.js";
+import { saveMessage, fetchMessages } from "../../services/messageService.js";
+import { ERROR_MESSAGES } from "../../utils/errorMessages.js";
 
 export const sendMessage = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
